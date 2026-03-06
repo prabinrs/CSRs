@@ -1,12 +1,12 @@
 # clinical-demo-py
 
 **Python-Based SDTM/ADaM Pipeline Demo**
-
+![demo](assets/gifs/demo.gif)
 ---
 
 ## Why Python for Clinical Programming?
 
-This project demonstrates that Python is a production-ready complement to SAS in clinical data standards work. 
+Python is opensouce and has a large community, which makes it a great choice for clinical programming and complement SAS.. 
 
 | Criterion | Python Advantage |
 |-----------|-----------------|
