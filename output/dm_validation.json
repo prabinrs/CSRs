@@ -1,0 +1,115 @@
+{
+  "domain": "DM",
+  "timestamp": "2026-03-05T18:54:41.831019",
+  "summary": {
+    "errors": 0,
+    "warnings": 0,
+    "passed": 13
+  },
+  "findings": [
+    {
+      "rule_id": "SD0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "-",
+      "message": "All 12 required variables present \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "SD0002",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "USUBJID",
+      "message": "No duplicate USUBJIDs \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "CT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "SEX",
+      "message": "SEX controlled terminology valid \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "CT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "RACE",
+      "message": "RACE controlled terminology valid \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "CT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "ETHNIC",
+      "message": "ETHNIC controlled terminology valid \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "CT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "AGEU",
+      "message": "AGEU controlled terminology valid \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "DT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "RFSTDTC",
+      "message": "RFSTDTC dates are ISO 8601 compliant \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "DT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "RFENDTC",
+      "message": "RFENDTC dates are ISO 8601 compliant \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "DT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "RFXSTDTC",
+      "message": "RFXSTDTC dates are ISO 8601 compliant \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "DT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "RFXENDTC",
+      "message": "RFXENDTC dates are ISO 8601 compliant \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "DT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "BRTHDTC",
+      "message": "BRTHDTC dates are ISO 8601 compliant \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "DT0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "DMDTC",
+      "message": "DMDTC dates are ISO 8601 compliant \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "DM0001",
+      "severity": "NOTE",
+      "domain": "DM",
+      "variable": "AGE",
+      "message": "AGE derivation consistent \u2713",
+      "affected_records": 0
+    }
+  ]
+}

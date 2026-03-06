@@ -1,0 +1,83 @@
+{
+  "domain": "ADSL",
+  "timestamp": "2026-03-05T18:54:41.855383",
+  "summary": {
+    "errors": 0,
+    "warnings": 0,
+    "passed": 9
+  },
+  "findings": [
+    {
+      "rule_id": "SD0001",
+      "severity": "NOTE",
+      "domain": "ADSL",
+      "variable": "-",
+      "message": "All 14 required variables present \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "SD0002",
+      "severity": "NOTE",
+      "domain": "ADSL",
+      "variable": "USUBJID",
+      "message": "No duplicate USUBJIDs \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "CT0001",
+      "severity": "NOTE",
+      "domain": "ADSL",
+      "variable": "SEX",
+      "message": "SEX controlled terminology valid \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "CT0001",
+      "severity": "NOTE",
+      "domain": "ADSL",
+      "variable": "RACE",
+      "message": "RACE controlled terminology valid \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "AD0001",
+      "severity": "NOTE",
+      "domain": "ADSL",
+      "variable": "SAFFL",
+      "message": "SAFFL population flag values valid \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "AD0001",
+      "severity": "NOTE",
+      "domain": "ADSL",
+      "variable": "ITTFL",
+      "message": "ITTFL population flag values valid \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "AD0001",
+      "severity": "NOTE",
+      "domain": "ADSL",
+      "variable": "COMPLFL",
+      "message": "COMPLFL population flag values valid \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "AD0002",
+      "severity": "NOTE",
+      "domain": "ADSL",
+      "variable": "TRT01P/TRT01PN",
+      "message": "Treatment variable mapping consistent \u2713",
+      "affected_records": 0
+    },
+    {
+      "rule_id": "AD0003",
+      "severity": "NOTE",
+      "domain": "ADSL",
+      "variable": "TRTDURD",
+      "message": "Treatment duration derivation consistent \u2713",
+      "affected_records": 0
+    }
+  ]
+}

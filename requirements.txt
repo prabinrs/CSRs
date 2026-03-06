@@ -1,0 +1,20 @@
+# clinical-demo-py requirements
+# Core data manipulation
+pandas>=2.0
+numpy>=1.24
+
+# SAS XPORT v5 read/write
+pyreadstat
+
+# Excel specification files
+openpyxl>=3.1
+
+# Visualization
+matplotlib>=3.7
+seaborn>=0.12
+
+# Interactive Dashboard
+streamlit>=1.30
+plotly>=5.18
+
+cdisc-rules-engine>=0.6
