@@ -1,4 +1,4 @@
-# clinical-demo-py
+# Clinical Study Reports and Submission Demo - py
 
 **Python-Based SDTM/ADaM Pipeline Demo**
 ![demo](assets/gifs/demo.gif)
@@ -57,7 +57,8 @@ clinical-demo-py/
 
 ```bash
 # 1. Clone and install
-git clone <repo-url> && cd clinical-demo-py
+git clone https://github.com/prabinrs/CSRs.git 
+cd CSRs
 pip install -r requirements.txt
 
 # 2. Run the full pipeline (CLI)
