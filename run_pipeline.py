@@ -40,17 +40,27 @@ def main():
     build_spec()
 
     # ── Step 2: Create SDTM DM ────────────────────────────────────
-    banner("STEP 2 — Creating SDTM DM Domain")
+    banner("STEP 2a — Creating SDTM DM Domain")
     from scripts.create_dm import create_dm, save_dm
     dm = create_dm()
     save_dm(dm)
 
+    banner("STEP 2b — Creating SDTM DS Domain")
+    from scripts.create_ds import create_ds, save_ds
+    ds = create_ds()
+    save_ds(ds)
+
     # ── Step 3: Derive ADaM ADSL ──────────────────────────────────
-    banner("STEP 3 — Deriving ADaM ADSL")
+    banner("STEP 3a — Deriving ADaM ADSL")
     from scripts.create_adsl import create_adsl, save_adsl, print_traceability
     print_traceability()
     adsl = create_adsl()
     save_adsl(adsl)
+
+    banner("STEP 3b — Deriving ADaM ADDS")
+    from scripts.create_adds import create_adds, save_adds
+    adds = create_adds()
+    save_adds(adds)
 
     # ── Step 4: Validation ─────────────────────────────────────────
     banner("STEP 4 — CDISC Conformance Validation")
@@ -84,7 +94,7 @@ def main():
     )
 
     # ── Step 5: Demographics Summary ──────────────────────────────
-    banner("STEP 5 — Demographics Summary & Visualization")
+    banner("STEP 5a — Demographics Summary & Visualization")
     from scripts.demographics_summary import (
         load_adsl, generate_table_14_1_1, create_demographics_figure
     )
@@ -100,6 +110,23 @@ def main():
         f.write(table)
     print(f"[VIZ] Table 14.1.1 → {tbl_path}")
 
+    # ── Step 5b: Disposition Summary ──────────────────────────────
+    banner("STEP 5b — Disposition Summary & Visualization")
+    from scripts.disposition_summary import (
+        load_adds, generate_table_14_1_2, create_disposition_figure
+    )
+    adds_viz = load_adds()
+    table_disp = generate_table_14_1_2(adds_viz)
+    print(table_disp)
+
+    fig_disp_path = os.path.join(PROJECT_ROOT, "output", "disposition_summary.png")
+    create_disposition_figure(adds_viz, fig_disp_path)
+
+    tbl_disp_path = os.path.join(PROJECT_ROOT, "output", "table_14_1_2.txt")
+    with open(tbl_disp_path, "w") as f:
+        f.write(table_disp)
+    print(f"[VIZ] Table 14.1.2 → {tbl_disp_path}")
+
     # ── Final Summary ─────────────────────────────────────────────
     elapsed = time.time() - start
     banner("PIPELINE COMPLETE")
@@ -108,12 +135,18 @@ def main():
     specs/sdtm_spec.xlsx           — SDTM mapping specification
     data/sdtm/dm.csv               — SDTM DM domain (CSV)
     data/sdtm/dm.xpt               — SDTM DM domain (SAS XPT v5)
+    data/sdtm/ds.csv               — SDTM DS domain (CSV)
+    data/sdtm/ds.xpt               — SDTM DS domain (SAS XPT v5)
     data/adam/adsl.csv              — ADaM ADSL dataset (CSV)
     data/adam/adsl.xpt              — ADaM ADSL dataset (SAS XPT v5)
+    data/adam/adds.csv              — ADaM ADDS dataset (CSV)
+    data/adam/adds.xpt              — ADaM ADDS dataset (SAS XPT v5)
     output/dm_validation.json      — DM conformance report
     output/adsl_validation.json    — ADSL conformance report
     output/demographics_summary.png — Demographics figure
     output/table_14_1_1.txt        — Table 14.1.1 text
+    output/disposition_summary.png  — Disposition figure
+    output/table_14_1_2.txt        — Table 14.1.2 text
 
   Validation: DM={dm_status} | ADSL={adsl_status}
   Total time: {elapsed:.1f}s

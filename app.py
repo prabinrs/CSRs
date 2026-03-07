@@ -180,6 +180,7 @@ with st.sidebar:
             "🗺️  SDTM Mapping Spec",
             "✅  Validation Report",
             "👥  Demographics",
+            "🚪  Disposition",
             "🔗  Traceability",
             "📤  Upload & Convert",
         ],
@@ -226,8 +227,16 @@ def load_sdtm_dm():
     return load_if_exists("data/sdtm/dm.csv")
 
 @st.cache_data
+def load_sdtm_ds():
+    return load_if_exists("data/sdtm/ds.csv")
+
+@st.cache_data
 def load_adam_adsl():
     return load_if_exists("data/adam/adsl.csv")
+
+@st.cache_data
+def load_adam_adds():
+    return load_if_exists("data/adam/adds.csv")
 
 def load_validation_json(domain: str) -> Union[dict , None]:
     path = data_path(f"output/{domain.lower()}_validation.json")
@@ -297,10 +306,10 @@ if page == "🏠  Pipeline Dashboard":
         | Step | Description | Output |
         |------|-------------|--------|
         | 1 | Build SDTM mapping spec | `specs/sdtm_spec.xlsx` |
-        | 2 | Create SDTM DM domain | `data/sdtm/dm.csv` + `.xpt` |
-        | 3 | Derive ADaM ADSL | `data/adam/adsl.csv` + `.xpt` |
+        | 2 | Create SDTM DM & DS domains | `data/sdtm/dm.csv`, `ds.csv` |
+        | 3 | Derive ADaM ADSL & ADDS | `data/adam/adsl.csv`, `adds.csv` |
         | 4 | CDISC conformance checks | `output/*_validation.json` |
-        | 5 | Demographics summary | `output/demographics_summary.png` |
+        | 5 | Demographics & Disposition summaries | `output/*_summary.png` |
         """)
 
     if run_all:
@@ -316,19 +325,25 @@ if page == "🏠  Pipeline Dashboard":
         build_spec()
         st.toast("✓ SDTM spec built", icon="📋")
 
-        # Step 2: DM
-        progress.progress(30, text="Step 2/5 — Creating SDTM DM domain...")
+        # Step 2: SDTM
+        progress.progress(30, text="Step 2/5 — Creating SDTM domains...")
         from scripts.create_dm import create_dm, save_dm
         dm = create_dm()
         save_dm(dm)
-        st.toast("✓ SDTM DM created", icon="📊")
+        from scripts.create_ds import create_ds, save_ds
+        ds = create_ds()
+        save_ds(ds)
+        st.toast("✓ SDTM DM & DS created", icon="📊")
 
-        # Step 3: ADSL
-        progress.progress(50, text="Step 3/5 — Deriving ADaM ADSL...")
+        # Step 3: ADaM
+        progress.progress(50, text="Step 3/5 — Deriving ADaM datasets...")
         from scripts.create_adsl import create_adsl, save_adsl
         adsl = create_adsl()
         save_adsl(adsl)
-        st.toast("✓ ADaM ADSL derived", icon="📈")
+        from scripts.create_adds import create_adds, save_adds
+        adds = create_adds()
+        save_adds(adds)
+        st.toast("✓ ADaM ADSL & ADDS derived", icon="📈")
 
         # Step 4: Validate
         progress.progress(70, text="Step 4/5 — Running CDISC validation...")
@@ -349,13 +364,20 @@ if page == "🏠  Pipeline Dashboard":
         st.toast("✓ Validation complete", icon="✅")
 
         # Step 5: Visualization
-        progress.progress(90, text="Step 5/5 — Generating demographics summary...")
+        progress.progress(90, text="Step 5/5 — Generating summaries...")
         from scripts.demographics_summary import load_adsl as load_adsl_viz, generate_table_14_1_1, create_demographics_figure
         adsl_v = load_adsl_viz()
         create_demographics_figure(adsl_v, data_path("output/demographics_summary.png"))
         table_txt = generate_table_14_1_1(adsl_v)
         with open(data_path("output/table_14_1_1.txt"), "w") as f:
             f.write(table_txt)
+            
+        from scripts.disposition_summary import load_adds as load_adds_viz, generate_table_14_1_2, create_disposition_figure
+        adds_v = load_adds_viz()
+        create_disposition_figure(adds_v, data_path("output/disposition_summary.png"))
+        table_disp_txt = generate_table_14_1_2(adds_v)
+        with open(data_path("output/table_14_1_2.txt"), "w") as f:
+            f.write(table_disp_txt)
         st.toast("✓ Visualizations generated", icon="👥")
 
         progress.progress(100, text="Pipeline complete!")
@@ -926,3 +948,62 @@ elif page == "📤  Upload & Convert":
         write the transformation script, and add validation rules.
     </div>
     """, unsafe_allow_html=True)
+
+# ======================================================================
+# PAGE: Disposition
+# ======================================================================
+elif page == "🚪  Disposition":
+    st.markdown("# 🚪 Disposition Summary")
+    st.markdown("Subject accountability and reasons for study discontinuation.")
+
+    adds = load_adam_adds()
+    if adds is None:
+        st.info("ADaM ADDS not yet available. Run the pipeline from the Dashboard.")
+    else:
+        st.markdown(f"*{len(adds)} analysis records available*")
+        st.markdown("---")
+
+        # ── Interactive Charts ─────────────────────────────────────
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # Disposition stacked bar
+            itt = adds[adds["ITTFL"] == "Y"].copy() if "ITTFL" in adds.columns else adds.copy()
+            itt["Status"] = itt["AVALC"].apply(lambda x: "Completed" if x == "COMPLETED" else "Discontinued")
+            counts = itt.groupby(["TRT01A", "Status"]).size().reset_index(name="count")
+            
+            fig_disp = px.bar(
+                counts, x="TRT01A", y="count", color="Status",
+                color_discrete_map={"Completed": "#10B981", "Discontinued": "#EF4444"},
+                title="Disposition by Treatment Arm",
+                labels={"TRT01A": "Treatment", "count": "Subjects", "Status": "Status"}
+            )
+            fig_disp.update_layout(height=400, barmode="stack")
+            st.plotly_chart(fig_disp, use_container_width=True)
+
+        with col2:
+            st.markdown("### Discontinuation Reasons")
+            disc = itt[itt["Status"] == "Discontinued"]
+            if len(disc) > 0:
+                disc_ct = disc.groupby(["TRT01A", "AVALC"]).size().reset_index(name="count")
+                fig_disc_rsn = px.bar(
+                    disc_ct, x="count", y="AVALC", color="TRT01A",
+                    color_discrete_map=TRT_COLORS,
+                    orientation="h",
+                    title="Reasons for Discontinuation",
+                    labels={"AVALC": "Reason", "count": "Subjects", "TRT01A": "Treatment"}
+                )
+                fig_disc_rsn.update_layout(height=400)
+                st.plotly_chart(fig_disc_rsn, use_container_width=True)
+            else:
+                st.info("No discontinuations in the selected population.")
+
+        # ── Table 14.1.2 ──────────────────────────────────────────
+        st.markdown("---")
+        st.subheader("Table 14.1.2 — Disposition Summary (Text)")
+        tbl_path = data_path("output/table_14_1_2.txt")
+        if os.path.exists(tbl_path):
+            with open(tbl_path) as f:
+                st.code(f.read(), language=None)
+        else:
+            st.info("Run the pipeline to generate Table 14.1.2.")

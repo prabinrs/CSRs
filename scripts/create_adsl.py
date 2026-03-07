@@ -65,7 +65,7 @@ def create_adsl(dm_path: str = None, ds_path: str = None) -> pd.DataFrame:
     if dm_path is None:
         dm_path = os.path.join(os.path.dirname(__file__), "..", "data", "sdtm", "dm.csv")
     if ds_path is None:
-        ds_path = os.path.join(os.path.dirname(__file__), "..", "data", "raw", "disposition.csv")
+        ds_path = os.path.join(os.path.dirname(__file__), "..", "data", "sdtm", "ds.csv")
 
     print(f"[ADSL] Reading SDTM DM: {dm_path}")
     dm = pd.read_csv(dm_path, dtype=str)
